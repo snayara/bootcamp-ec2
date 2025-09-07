@@ -119,10 +119,17 @@ Aqui está sua anotação reorganizada, revisada e com as lacunas preenchidas. F
   * Funciona como “foto” da máquina inteira, não apenas do disco.
 
 ---
+# Arquitetura Proposta 
 
-👉 **Resumo rápido:**
+A arquitetura utiliza o Amazon S3 como repositório central de dados, funcionando como Data Lake. Arquivos brutos são armazenados em buckets específicos e, a cada novo upload, um AWS Lambda é acionado para realizar validações, transformações leves ou movimentação dos dados entre camadas de armazenamento (raw → processed).
 
-* **EBS** = disco rígido virtual para instâncias EC2.
-* **S3** = armazenamento de objetos escalável.
-* **AMI** = imagem pronta para criar instâncias EC2.
+Para cargas de trabalho mais intensivas, é utilizada uma instância Amazon EC2, configurada a partir de uma AMI personalizada com as dependências necessárias. Essa instância conta com Amazon EBS como volume de armazenamento em bloco, fornecendo alto desempenho de leitura e escrita para o processamento em batch.
+
+Os dados processados retornam ao Amazon S3, agora organizados em camadas analíticas, podendo ser consumidos por serviços como Amazon Athena ou QuickSight.
+
+Essa solução combina escalabilidade (S3), processamento automatizado (Lambda), flexibilidade computacional (EC2) e desempenho em armazenamento de bloco (EBS), atendendo diferentes necessidades de um pipeline de dados.
+<img width="748" height="277" alt="arquitetura Ec2 drawio (1)" src="https://github.com/user-attachments/assets/efb99c15-d0b3-43f5-a712-1a8eba73663b" />
+
+
+
 
